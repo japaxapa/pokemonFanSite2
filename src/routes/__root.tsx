@@ -1,4 +1,7 @@
 import { Outlet, createRootRoute } from '@tanstack/react-router'
+import NavigationMenu from '#/components/Navigation/NavigationMenu'
+import { Theme } from '@radix-ui/themes'
+import '@radix-ui/themes/styles.css'
 import '../styles.css'
 
 export const Route = createRootRoute({
@@ -8,7 +11,12 @@ export const Route = createRootRoute({
 function RootComponent() {
   return (
     <>
-      <Outlet />
+      <Theme>
+        <div>
+          <NavigationMenu />
+          <Outlet />
+        </div>
+      </Theme>
     </>
   )
 }

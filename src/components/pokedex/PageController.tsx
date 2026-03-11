@@ -10,7 +10,7 @@ interface IPageController {
 
 export default function PageController({ hasPrev, hasNext, handlePageChange }: IPageController) {
   return (
-    <Flex align={'center'} p={'3'} justify={'between'}>
+    <Flex align={'center'} justify={'between'}>
       <Button
         variant="outline"
         onClick={() => handlePageChange(-1)}

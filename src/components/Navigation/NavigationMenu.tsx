@@ -22,7 +22,7 @@ export default function NavigationMenu() {
           p={'4'}
         >
           {navLinks.map((link) => (
-            <NavButton>
+            <NavButton key={link.title}>
               <Link to={link.to}>{link.title}</Link>
             </NavButton>
           ))}
@@ -31,7 +31,7 @@ export default function NavigationMenu() {
           <Avatar
             src="https://placehold.co/600x400.png"
             fallback={'P'}
-            radius='full'
+            radius="full"
           />
         </Flex>
       </Flex>

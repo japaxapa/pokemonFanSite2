@@ -8,6 +8,9 @@ interface IPageController {
   handlePageChange(page: number): void
 }
 
+// TODO page buttons
+// TODO limit select
+
 export default function PageController({ hasPrev, hasNext, handlePageChange }: IPageController) {
   return (
     <Flex align={'center'} justify={'between'}>

@@ -3,6 +3,12 @@ import type { Pokemon } from 'pokenode-ts'
 import { useState, useEffect } from 'react'
 
 interface UsePokemonReturn {
+  pokemon: Pokemon | null
+  loading: boolean
+  error: string | null
+}
+
+interface UsePokemonsReturn {
   pokemons: Pokemon[] | null
   hasNext: boolean
   hasPrev: boolean
@@ -10,7 +16,39 @@ interface UsePokemonReturn {
   error: string | null
 }
 
-export function usePokemons(offset = 0, limit = 50): UsePokemonReturn {
+const api = new PokemonClient()
+
+export function usePokemon(name: string): UsePokemonReturn {
+  const [pokemon, setPokemon] = useState<Pokemon | null>(null)
+  const [loading, setLoading] = useState<boolean>(true)
+  const [error, setError] = useState<string | null>(null)
+
+  useEffect(() => {
+    const fetchPokemon = async () => {
+      try {
+        setLoading(true)
+        setError(null)
+
+        const data = await api.getPokemonByName(name)
+        setPokemon(data)
+      } catch (err) {
+        setError(
+          err instanceof Error
+            ? err.message
+            : 'An error occurred while quering pokemon by name',
+        )
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    if (name) fetchPokemon()
+  }, [name])
+
+  return { pokemon, loading, error }
+}
+
+export function usePokemons(offset = 0, limit = 50): UsePokemonsReturn {
   const [pokemons, setPokemons] = useState<Pokemon[] | null>(null)
   const [loading, setLoading] = useState<boolean>(true)
   const [error, setError] = useState<string | null>(null)

@@ -1,3 +1,4 @@
+import { useQuery } from '@tanstack/react-query'
 import { PokemonClient } from 'pokenode-ts'
 import type { Pokemon } from 'pokenode-ts'
 import { useState, useEffect } from 'react'
@@ -7,6 +8,11 @@ interface UsePokemonReturn {
   loading: boolean
   error: string | null
 }
+interface UsePokemon2Return {
+  pokemon: Pokemon | null
+  loading: boolean
+  error: boolean
+}
 
 interface UsePokemonsReturn {
   pokemons: Pokemon[] | null
@@ -14,6 +20,14 @@ interface UsePokemonsReturn {
   hasPrev: boolean
   loading: boolean
   error: string | null
+}
+
+interface UsePokemons2Return {
+  pokemons: Pokemon[] | null
+  hasNext: boolean
+  hasPrev: boolean
+  loading: boolean
+  error: boolean
 }
 
 const api = new PokemonClient()
@@ -46,6 +60,18 @@ export function usePokemon(name: string): UsePokemonReturn {
   }, [name])
 
   return { pokemon, loading, error }
+}
+
+export function usePokemon2(name: string): UsePokemon2Return {
+  const { data, isFetching, isError } = useQuery({
+    queryKey: ['pokemon' + '-' + name],
+    queryFn: async () => {
+      const data = await api.getPokemonByName(name)
+      return data
+    },
+  })
+
+  return { pokemon: data || null, loading: isFetching, error: isError }
 }
 
 export function usePokemons(offset = 0, limit = 50): UsePokemonsReturn {
@@ -94,4 +120,35 @@ export function usePokemons(offset = 0, limit = 50): UsePokemonsReturn {
   }, [offset, limit])
 
   return { pokemons, hasNext, hasPrev, loading, error }
+}
+
+export function usePokemons2(offset = 0, limit = 50): UsePokemons2Return {
+  const query = useQuery({
+    queryKey: ['pokedex' + '-offset' + offset + '-limit' + limit],
+    queryFn: async () => {
+      const pokemonList = await api.listPokemons(offset, limit)
+
+      const data = await Promise.all(
+        pokemonList.results.map((namedAPIresource) =>
+          api.getPokemonByName(namedAPIresource.name),
+        ),
+      )
+
+      const result = {
+        pokemons: data,
+        hasNext: Boolean(pokemonList.next),
+        hasPrev: Boolean(pokemonList.previous),
+      }
+
+      return result
+    },
+  })
+
+  return {
+    pokemons: query.data?.pokemons || [],
+    hasNext: query.data?.hasNext || false,
+    hasPrev: query.data?.hasPrev || false,
+    loading: query.isFetching,
+    error: query.isError,
+  }
 }

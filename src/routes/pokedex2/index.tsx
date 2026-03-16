@@ -1,13 +1,13 @@
-import { usePokemon, usePokemons } from '#/hooks/usePokemon'
+import { usePokemon2, usePokemons2 } from '#/hooks/usePokemon'
 import { Container, Flex } from '@radix-ui/themes'
 import { createFileRoute } from '@tanstack/react-router'
 import { useState } from 'react'
 
-import SearchBar from '#/components/pokedex/SeachBar'
-import RegionButtons from '#/components/pokedex/GenerationButtons'
 import PokedexCardsDisplay from '#/components/pokedex/CardsDisplay'
+import RegionButtons from '#/components/pokedex/GenerationButtons'
+import SearchBar from '#/components/pokedex/SeachBar'
 
-export const Route = createFileRoute('/pokedex/')({
+export const Route = createFileRoute('/pokedex2/')({
   component: RouteComponent,
 })
 
@@ -18,10 +18,8 @@ function RouteComponent() {
 
   const [searchTrigger, setSearchTrigger] = useState<string>('')
 
-  const { pokemons, hasPrev, hasNext, loading } = usePokemons(offset, limit)
-
-  // Trigger search when searchTrigger changes
-  const { pokemon, loading: loadingSearch } = usePokemon(searchTrigger)
+  const { pokemons, hasPrev, hasNext, loading } = usePokemons2(offset, limit)
+  const { pokemon, loading: loadingSearch } = usePokemon2(searchTrigger)
 
   const handlePageChange = (pageChange: number) => {
     setOffset((prev) => prev + limit * pageChange)

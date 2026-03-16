@@ -5,6 +5,7 @@ import NavButton from './NavButton'
 const navLinks = [
   { to: '/', title: 'Home' },
   { to: '/pokedex', title: 'Pokedex' },
+  { to: '/pokedex2', title: 'Pokedex 2.0' },
 ]
 
 export default function NavigationMenu() {

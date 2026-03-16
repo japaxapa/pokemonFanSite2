@@ -1,4 +1,4 @@
-import { Avatar, Box, Flex, Text } from '@radix-ui/themes'
+import { Avatar, Flex, Text } from '@radix-ui/themes'
 import { Link } from '@tanstack/react-router'
 import NavButton from './NavButton'
 
@@ -6,6 +6,7 @@ const navLinks = [
   { to: '/', title: 'Home' },
   { to: '/pokedex', title: 'Pokedex' },
   { to: '/pokedex2', title: 'Pokedex 2.0' },
+  { to: '/infpokedex', title: 'Infinite Scroll Pokedex' },
 ]
 
 export default function NavigationMenu() {

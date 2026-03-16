@@ -5,7 +5,7 @@ import ChevronRightIcon from '../icons/CrevronRightIcon'
 interface IPageController {
   hasPrev: boolean
   hasNext: boolean
-  handlePageChange(page: number): void
+  handlePageChange: (page: number) => void
 }
 
 // TODO page buttons

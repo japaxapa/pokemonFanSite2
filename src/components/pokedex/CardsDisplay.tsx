@@ -10,7 +10,7 @@ interface IPokedexCardsDisplay {
   limit: number
   pokemons: Pokemon[] | null
   enablePageController: boolean
-  handlePageChange(page: number): void
+  handlePageChange: (page: number) => void
 }
 
 export default function PokedexCardsDisplay({

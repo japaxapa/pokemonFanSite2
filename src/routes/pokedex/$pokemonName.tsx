@@ -1,9 +1,9 @@
-import { PokemonType, pokemonTypesColors } from '#/constants/types'
+import type { PokemonType } from '#/constants/types'
+import { pokemonTypesColors } from '#/constants/types'
 import { usePokemon } from '#/hooks/usePokemon'
 import {
   Avatar,
   Badge,
-  Box,
   Card,
   DataList,
   Flex,

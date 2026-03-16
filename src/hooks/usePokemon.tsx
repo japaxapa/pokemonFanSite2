@@ -2,6 +2,7 @@ import { useQuery } from '@tanstack/react-query'
 import { PokemonClient } from 'pokenode-ts'
 import type { Pokemon } from 'pokenode-ts'
 import { useState, useEffect } from 'react'
+import { useNavigate } from '@tanstack/react-router'
 
 interface UsePokemonReturn {
   pokemon: Pokemon | null
@@ -11,7 +12,6 @@ interface UsePokemonReturn {
 interface UsePokemon2Return {
   pokemon: Pokemon | null
   loading: boolean
-  error: boolean
 }
 
 interface UsePokemonsReturn {
@@ -27,12 +27,12 @@ interface UsePokemons2Return {
   hasNext: boolean
   hasPrev: boolean
   loading: boolean
-  error: boolean
 }
 
 const api = new PokemonClient()
 
 export function usePokemon(name: string): UsePokemonReturn {
+  const navigate = useNavigate()
   const [pokemon, setPokemon] = useState<Pokemon | null>(null)
   const [loading, setLoading] = useState<boolean>(true)
   const [error, setError] = useState<string | null>(null)
@@ -51,38 +51,46 @@ export function usePokemon(name: string): UsePokemonReturn {
             ? err.message
             : 'An error occurred while quering pokemon by name',
         )
+        navigate({ to: '/error' })
       } finally {
         setLoading(false)
       }
     }
 
     if (name) fetchPokemon()
-  }, [name])
+  }, [name, navigate])
 
   return { pokemon, loading, error }
 }
 
 export function usePokemon2(name: string): UsePokemon2Return {
+  const navigate = useNavigate()
   const { data, isFetching, isError } = useQuery({
     queryKey: ['pokemon' + '-' + name],
     queryFn: async () => {
+      if (!name) return null
+
+      // Error test
+      // throw new Error()
       const data = await api.getPokemonByName(name)
+
       return data
     },
   })
 
-  return { pokemon: data || null, loading: isFetching, error: isError }
+  if (isError) navigate({ to: '/error' })
+
+  return { pokemon: data || null, loading: isFetching }
 }
 
 export function usePokemons(offset = 0, limit = 50): UsePokemonsReturn {
+  const navigate = useNavigate()
   const [pokemons, setPokemons] = useState<Pokemon[] | null>(null)
   const [loading, setLoading] = useState<boolean>(true)
   const [error, setError] = useState<string | null>(null)
 
   const [hasPrev, setHasPrev] = useState<boolean>(false)
   const [hasNext, setHasNext] = useState<boolean>(false)
-
-  const api = new PokemonClient()
 
   useEffect(() => {
     const fetchPokemons = async () => {
@@ -112,17 +120,19 @@ export function usePokemons(offset = 0, limit = 50): UsePokemonsReturn {
         )
         setHasPrev(false)
         setHasNext(false)
+        navigate({ to: '/error' })
       } finally {
         setLoading(false)
       }
     }
     fetchPokemons()
-  }, [offset, limit])
+  }, [offset, limit, navigate])
 
   return { pokemons, hasNext, hasPrev, loading, error }
 }
 
 export function usePokemons2(offset = 0, limit = 50): UsePokemons2Return {
+  const navigate = useNavigate()
   const query = useQuery({
     queryKey: ['pokedex' + '-offset' + offset + '-limit' + limit],
     queryFn: async () => {
@@ -139,16 +149,16 @@ export function usePokemons2(offset = 0, limit = 50): UsePokemons2Return {
         hasNext: Boolean(pokemonList.next),
         hasPrev: Boolean(pokemonList.previous),
       }
-
       return result
     },
   })
+
+  if (query.isError) navigate({ to: '/error' })
 
   return {
     pokemons: query.data?.pokemons || [],
     hasNext: query.data?.hasNext || false,
     hasPrev: query.data?.hasPrev || false,
     loading: query.isFetching,
-    error: query.isError,
   }
 }

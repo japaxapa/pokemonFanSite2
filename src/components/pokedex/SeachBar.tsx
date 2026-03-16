@@ -3,7 +3,7 @@ import MagnifyingGlassIcon from '../icons/MagnifyingGlassIcon'
 import { useState } from 'react'
 
 interface ISearchBar {
-  handleSearchName(name: string): void
+  handleSearchName: (name: string) => void
 }
 
 // TODO autocomplete
@@ -38,10 +38,7 @@ export default function SearchBar({ handleSearchName }: ISearchBar) {
             <MagnifyingGlassIcon />
           </TextField.Slot>
 
-          <Button
-            onClick={handleClick}
-            variant="outline"
-          >
+          <Button onClick={handleClick} variant="outline">
             Search
           </Button>
         </TextField.Root>

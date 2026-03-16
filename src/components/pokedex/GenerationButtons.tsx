@@ -1,11 +1,11 @@
 import { Button, Grid } from '@radix-ui/themes'
 
 interface IRegionButtons {
-  handleClick(
+  handleClick: (
     offset: number,
     limit: number,
     enablePageController: boolean,
-  ): void
+  ) => void
 }
 
 const regions = [

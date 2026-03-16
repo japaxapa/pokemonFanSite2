@@ -1,7 +1,7 @@
 import { usePokemon2, usePokemons2 } from '#/hooks/usePokemon'
 import { Container, Flex } from '@radix-ui/themes'
 import { createFileRoute } from '@tanstack/react-router'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 import PokedexCardsDisplay from '#/components/pokedex/CardsDisplay'
 import RegionButtons from '#/components/pokedex/GenerationButtons'
@@ -40,6 +40,11 @@ function RouteComponent() {
   const handleSearchName = (name: string) => {
     setSearchTrigger(name)
   }
+
+  useEffect(() => {
+    setSearchTrigger('')
+
+  }, [])
 
   return (
     <Container align={'center'} p={'2'}>

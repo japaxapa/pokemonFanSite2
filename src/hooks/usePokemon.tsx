@@ -164,24 +164,19 @@ export function usePokemons2(offset = 0, limit = 50): UsePokemons2Return {
   }
 }
 
-// TODO cachinf strategy
 export function useINFPokemons(
   selectedGeneration: number | null,
-  offset = 0,
   limit = 50,
 ) {
   const navigate = useNavigate()
 
   const queryKey = [
-    'infpokedex',
-    selectedGeneration, // include the filter in the cache key
-    offset,
-    limit,
+    'infpokedex' + selectedGeneration,
   ]
 
   const infQuery = useInfiniteQuery({
     queryKey,
-    queryFn: async ({ pageParam = offset }) => {
+    queryFn: async ({ pageParam }) => {
       if (selectedGeneration !== null) {
         const genInfo = GENERATIONS_PARAMS[selectedGeneration]
         const data = await api.listPokemons(genInfo.offset, genInfo.limit)
@@ -202,7 +197,7 @@ export function useINFPokemons(
         return { pokemons: results, next: data.next, previous: data.previous }
       }
     },
-    initialPageParam: offset,
+    initialPageParam: 0,
     getNextPageParam: (lastPage, _, lastPageParam) => {
       if (selectedGeneration !== null || !lastPage.next) return undefined
       return lastPageParam + limit

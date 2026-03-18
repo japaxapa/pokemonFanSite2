@@ -4,13 +4,12 @@ import { useINFPokemons } from '#/hooks/usePokemon'
 
 interface IINFCardDisplay {
   selectedGeneration: number | null
-  offset: number
   limit: number
 }
 
-export default function INFCardsDisplay({selectedGeneration, offset, limit}: IINFCardDisplay) {
+export default function INFCardsDisplay({selectedGeneration, limit}: IINFCardDisplay) {
   
-  const infQuery = useINFPokemons(selectedGeneration, offset, limit)
+  const infQuery = useINFPokemons(selectedGeneration, limit)
 
   return (
     <Card size={'4'}>

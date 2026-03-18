@@ -23,41 +23,34 @@ export default function AdvancedFilter({
   setSelectedGeneration,
 }: IADVFilter) {
   const [hasFilter, setHasFilter] = useState(false)
-  const [dialogOpen, setDialogOpen] = useState(false)
-  const [draftGeneration, setDraftGeneration] = useState<number>(9)
 
   const clearFilters = () => {
     setHasFilter(false)
     setSelectedGeneration(null)
-    setDraftGeneration(9)
   }
 
   const handleSubmit = (event: React.SyntheticEvent<HTMLFormElement>) => {
     event.preventDefault()
     const formData = new FormData(event.currentTarget)
+
+    // GEN Filter
     const generationValue = formData.get('generation') as string | null
     const generationIndex =
-      generationValue && generationValue !== ''
+      generationValue && (generationValue !== '' && generationValue !== '9')
         ? parseInt(generationValue, 10)
         : null
 
     setSelectedGeneration(generationIndex)
+
+    // ALL
     setHasFilter(generationIndex !== null)
-    setDialogOpen(false)
   }
 
   return (
     <Card size={'2'} mb={'3'}>
       <Box width={'100%'} px={'5'}>
         <Flex gap={'4'}>
-          <Dialog.Root
-            open={dialogOpen}
-            onOpenChange={(open) => {
-              setDialogOpen(open)
-              if (open)
-                setDraftGeneration(selectedGeneration ? selectedGeneration : 9)
-            }}
-          >
+          <Dialog.Root>
             <Dialog.Trigger>
               <Button>
                 <FilterIcon /> Filter
@@ -78,18 +71,19 @@ export default function AdvancedFilter({
               <Card my={'2'} size={'2'}>
                 <Flex direction={'column'} gap={'4'}>
                   <Form onSubmit={handleSubmit}>
-                    <FormField name="generation">
+                    <FormField name="generationWrapper">
                       <Flex direction={'column'} gap={'4'}>
                         <FormLabel>
                           <Text weight={'medium'}>Generation</Text>
                         </FormLabel>
                         <RadioCards.Root
                           mt={'1'}
-                          defaultValue={draftGeneration?.toString()}
-                          value={draftGeneration?.toString()}
-                          onValueChange={(val) =>
-                            setDraftGeneration(val ? parseInt(val, 10) : 9)
+                          defaultValue={
+                            selectedGeneration
+                              ? selectedGeneration.toString()
+                              : '9'
                           }
+                          name="generation"
                         >
                           {GENERATIONS_PARAMS.map((GENERATION, idx) => (
                             <RadioCards.Item value={idx.toString()} key={idx}>
@@ -106,7 +100,9 @@ export default function AdvancedFilter({
                           Cancel
                         </Button>
                       </Dialog.Close>
-                      <Button type="submit">Apply</Button>
+                      <Dialog.Close>
+                        <Button type="submit">Apply</Button>
+                      </Dialog.Close>
                     </Flex>
                   </Form>
                 </Flex>

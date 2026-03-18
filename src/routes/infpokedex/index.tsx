@@ -10,7 +10,6 @@ export const Route = createFileRoute('/infpokedex/')({
 })
 
 function RouteComponent() {
-  const [offset, setOffset] = useState(0)
   const [limit, setLimit] = useState(50)
   const [selectedGeneration, setSelectedGeneration] = useState<number | null>(
     null,
@@ -24,7 +23,6 @@ function RouteComponent() {
       />
       <INFCardsDisplay
         selectedGeneration={selectedGeneration}
-        offset={offset}
         limit={limit}
       />
     </Container>

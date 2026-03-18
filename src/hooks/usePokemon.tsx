@@ -1,8 +1,9 @@
-import { useQuery } from '@tanstack/react-query'
+import { useInfiniteQuery, useQuery } from '@tanstack/react-query'
 import { PokemonClient } from 'pokenode-ts'
 import type { Pokemon } from 'pokenode-ts'
 import { useState, useEffect } from 'react'
 import { useNavigate } from '@tanstack/react-router'
+import { GENERATIONS_PARAMS } from '#/constants/consts'
 
 interface UsePokemonReturn {
   pokemon: Pokemon | null
@@ -161,4 +162,58 @@ export function usePokemons2(offset = 0, limit = 50): UsePokemons2Return {
     hasPrev: query.data?.hasPrev || false,
     loading: query.isFetching,
   }
+}
+
+// TODO cachinf strategy
+export function useINFPokemons(
+  selectedGeneration: number | null,
+  offset = 0,
+  limit = 50,
+) {
+  const navigate = useNavigate()
+
+  const queryKey = [
+    'infpokedex',
+    selectedGeneration, // include the filter in the cache key
+    offset,
+    limit,
+  ]
+
+  const infQuery = useInfiniteQuery({
+    queryKey,
+    queryFn: async ({ pageParam = offset }) => {
+      if (selectedGeneration !== null) {
+        const genInfo = GENERATIONS_PARAMS[selectedGeneration]
+        const data = await api.listPokemons(genInfo.offset, genInfo.limit)
+        const results = await Promise.all(
+          data.results.map((namedAPIResources) =>
+            api.getPokemonByName(namedAPIResources.name),
+          ),
+        )
+
+        return { pokemons: results, next: null, previous: null }
+      } else {
+        const data = await api.listPokemons(pageParam, limit)
+        const results = await Promise.all(
+          data.results.map((namedAPIResource) =>
+            api.getPokemonByName(namedAPIResource.name),
+          ),
+        )
+        return { pokemons: results, next: data.next, previous: data.previous }
+      }
+    },
+    initialPageParam: offset,
+    getNextPageParam: (lastPage, _, lastPageParam) => {
+      if (selectedGeneration !== null || !lastPage.next) return undefined
+      return lastPageParam + limit
+    },
+    getPreviousPageParam: (_, __, firstPageParam) => {
+      if (selectedGeneration !== null || firstPageParam <= 1) return undefined
+      return firstPageParam - limit
+    },
+  })
+
+  if (infQuery.isError) navigate({ to: '/error' })
+
+  return infQuery
 }

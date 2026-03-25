@@ -1,6 +1,7 @@
-import { Avatar, Flex, Text } from '@radix-ui/themes'
+import { Flex, Text } from '@radix-ui/themes'
 import { Link } from '@tanstack/react-router'
 import NavButton from './NavButton'
+import ProfileButton from './PofileButton'
 
 const navLinks = [
   { to: '/', title: 'Home' },
@@ -16,6 +17,7 @@ export default function NavigationMenu() {
         <Flex align={'center'} justify={'center'} p={'4'}>
           <Text weight={'bold'}>LOGO</Text>
         </Flex>
+
         <Flex
           gap={'4'}
           align={'center'}
@@ -29,13 +31,8 @@ export default function NavigationMenu() {
             </NavButton>
           ))}
         </Flex>
-        <Flex p={'4'}>
-          <Avatar
-            src="https://placehold.co/600x400.png"
-            fallback={'P'}
-            radius="full"
-          />
-        </Flex>
+
+        <ProfileButton />
       </Flex>
     </nav>
   )

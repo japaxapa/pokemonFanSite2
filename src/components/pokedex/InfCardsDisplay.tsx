@@ -1,15 +1,18 @@
 import { Card, Flex, Button, Grid, Skeleton } from '@radix-ui/themes'
 import PokedexCard from './PokedexCard'
 import { useINFPokemons } from '#/hooks/usePokemon'
+import { useADVFilter } from '#/contexts/FilterContext'
 
 interface IINFCardDisplay {
-  selectedGeneration: number | null
   limit: number
 }
 
-export default function INFCardsDisplay({selectedGeneration, limit}: IINFCardDisplay) {
-  
-  const infQuery = useINFPokemons(selectedGeneration, limit)
+// TODO create a button factory
+
+export default function INFCardsDisplay({ limit }: IINFCardDisplay) {
+  const { filters } = useADVFilter()
+
+  const infQuery = useINFPokemons(filters.selectedGeneration, limit)
 
   return (
     <Card size={'4'}>
@@ -17,7 +20,7 @@ export default function INFCardsDisplay({selectedGeneration, limit}: IINFCardDis
         <Button
           loading={infQuery.isFetching}
           disabled={
-            selectedGeneration !== null ||
+            filters.selectedGeneration !== null ||
             !infQuery.hasPreviousPage ||
             infQuery.isFetching
           }
@@ -45,7 +48,7 @@ export default function INFCardsDisplay({selectedGeneration, limit}: IINFCardDis
         <Button
           loading={infQuery.isFetching}
           disabled={
-            selectedGeneration !== null ||
+            filters.selectedGeneration !== null ||
             !infQuery.hasNextPage ||
             infQuery.isFetching
           }

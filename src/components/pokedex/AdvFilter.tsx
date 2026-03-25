@@ -1,28 +1,17 @@
-import {
-  Box,
-  Button,
-  Card,
-  Flex,
-} from '@radix-ui/themes'
+import { Box, Button, Card, Flex } from '@radix-ui/themes'
 import FilterOffIcon from '../icons/FilterOffIcon'
 import { useState } from 'react'
-import FilterModal from './FilterModal'
+import FilterModal from './FilterModal/FilterModal'
+import { useADVFilter } from '#/contexts/FilterContext'
 
-// TODO check if selectedGeneration should be a global state
-interface IADVFilter {
-  selectedGeneration: number | null
-  setSelectedGeneration: (generation: number | null) => void
-}
-
-export default function AdvancedFilter({
-  selectedGeneration,
-  setSelectedGeneration,
-}: IADVFilter) {
+export default function AdvancedFilter() {
   const [hasFilter, setHasFilter] = useState(false)
+
+  const { setFilters } = useADVFilter()
 
   const clearFilters = () => {
     setHasFilter(false)
-    setSelectedGeneration(null)
+    setFilters({ selectedGeneration: null })
   }
 
   const handleSubmit = (event: React.SyntheticEvent<HTMLFormElement>) => {
@@ -36,7 +25,7 @@ export default function AdvancedFilter({
         ? parseInt(generationValue, 10)
         : null
 
-    setSelectedGeneration(generationIndex)
+    setFilters({ selectedGeneration: generationIndex })
 
     // ALL
     setHasFilter(generationIndex !== null)
@@ -48,7 +37,6 @@ export default function AdvancedFilter({
         <Flex gap={'4'}>
           <FilterModal
             handleSubmit={handleSubmit}
-            selectedGeneration={selectedGeneration}
           />
           {hasFilter && (
             <Button onClick={clearFilters}>

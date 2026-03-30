@@ -10,7 +10,7 @@ export default function PokedexCard({ pokemon }: { pokemon: Pokemon }) {
   const { filters, addToFavorites, removeFromFavorites } = useFilter()
   const { favorites } = filters
 
-  const isFavorite = favorites.some((f: { id: number; name: string }) => f.id === pokemon.id)
+  const isFavorite = favorites.some((f: Pokemon) => f.id === pokemon.id)
 
   return (
     <Card key={pokemon.id} asChild>
@@ -33,7 +33,9 @@ export default function PokedexCard({ pokemon }: { pokemon: Pokemon }) {
                 onClick={(event) => {
                   event.preventDefault()
                   event.stopPropagation()
-                  isFavorite ? removeFromFavorites(pokemon.id) : addToFavorites({ id: pokemon.id, name: pokemon.name })
+                  isFavorite
+                    ? removeFromFavorites(pokemon.id)
+                    : addToFavorites(pokemon)
                 }}
                 variant={isFavorite ? 'soft' : 'classic'}
               >

@@ -4,6 +4,7 @@ import { Theme } from '@radix-ui/themes'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import '@radix-ui/themes/styles.css'
 import '../styles.css'
+import { FilterProvider } from '#/contexts/FilterContext'
 
 export const Route = createRootRoute({
   component: RootComponent,
@@ -16,10 +17,12 @@ function RootComponent() {
     <>
       <Theme>
         <QueryClientProvider client={queryClient}>
-          <div>
-            <NavigationMenu />
-            <Outlet />
-          </div>
+          <FilterProvider>
+            <div>
+              <NavigationMenu />
+              <Outlet />
+            </div>
+          </FilterProvider>
         </QueryClientProvider>
       </Theme>
     </>

@@ -1,14 +1,7 @@
 import type { PokemonType } from '#/constants/types'
 import { pokemonTypesColors } from '#/constants/types'
 import { usePokemon } from '#/hooks/usePokemon'
-import {
-  Avatar,
-  Badge,
-  Card,
-  DataList,
-  Flex,
-  Skeleton,
-} from '@radix-ui/themes'
+import { Avatar, Badge, Card, DataList, Flex, Skeleton } from '@radix-ui/themes'
 import { createFileRoute } from '@tanstack/react-router'
 
 export const Route = createFileRoute('/pokedex/$pokemonName')({
@@ -58,6 +51,7 @@ function RouteComponent() {
                 <Flex gap={'2'}>
                   {pokemon?.types.map((type) => (
                     <Badge
+                      key={type.type.name}
                       color={
                         pokemonTypesColors[
                           type.type.name.toUpperCase() as PokemonType

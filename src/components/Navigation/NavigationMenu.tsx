@@ -1,5 +1,4 @@
 import { Flex, Text } from '@radix-ui/themes'
-import { Link } from '@tanstack/react-router'
 import NavButton from './NavButton'
 import ProfileButton from './PofileButton'
 
@@ -13,7 +12,7 @@ const navLinks = [
 export default function NavigationMenu() {
   return (
     <nav>
-      <Flex justify={'between'}>
+      <Flex justify={'between'} style={styles.navMenuContainer}>
         <Flex align={'center'} justify={'center'} p={'4'}>
           <Text weight={'bold'}>LOGO</Text>
         </Flex>
@@ -21,14 +20,12 @@ export default function NavigationMenu() {
         <Flex
           gap={'4'}
           align={'center'}
-          justify={'center'}
+          justify={'between'}
           width={'100%'}
           p={'4'}
         >
           {navLinks.map((link) => (
-            <NavButton key={link.title}>
-              <Link to={link.to}>{link.title}</Link>
-            </NavButton>
+            <NavButton key={link.title} link={link} />
           ))}
         </Flex>
 
@@ -36,4 +33,10 @@ export default function NavigationMenu() {
       </Flex>
     </nav>
   )
+}
+
+const styles: Record<string, React.CSSProperties> = {
+  navMenuContainer: {
+    boxShadow: 'rgba(17, 17, 26, 0.1) 0px 1px 0px',
+  },
 }

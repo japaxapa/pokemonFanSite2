@@ -1,4 +1,4 @@
-import PokemonCard from '#/components/pokedex/FilterModal/PokemonCard'
+import PokemonCard from '#/components/pokedex/PokemonCard'
 import { Flex } from '@radix-ui/themes'
 import { createFileRoute } from '@tanstack/react-router'
 

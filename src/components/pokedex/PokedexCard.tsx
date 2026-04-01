@@ -5,6 +5,7 @@ import HollowStarIcon from '../icons/HollowStarIcon'
 import AddIcon from '../icons/AddIcon'
 import FilledStarIcon from '../icons/FilledStarIcon'
 import { useFilter } from '../../contexts/FilterContext'
+import { IDToStandardSizedString } from '#/utils/utils'
 
 export default function PokedexCard({ pokemon }: { pokemon: Pokemon }) {
   const { filters, addToFavorites, removeFromFavorites } = useFilter()
@@ -60,7 +61,7 @@ export default function PokedexCard({ pokemon }: { pokemon: Pokemon }) {
             </Tooltip>
           </Flex>
           <Text>
-            #{pokemon.id.toString().padStart(3, '0')} {pokemon.name}
+            #{IDToStandardSizedString(pokemon.id)} {pokemon.name}
           </Text>
         </Flex>
       </Link>

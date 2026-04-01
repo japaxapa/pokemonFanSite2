@@ -17,6 +17,7 @@ import ShieldIcon from '../icons/ShieldIcon'
 import LightningIcon from '../icons/LightiningIcon'
 import RulerIcon from '../icons/RulerIcon'
 import WeightIcon from '../icons/WeigthIcon'
+import { IDToStandardSizedString } from '#/utils/utils'
 
 interface IPokemonCard {
   pokemonName: string
@@ -48,7 +49,8 @@ function renderStatIcon(statName: string) {
   const config = STAT_ICON_CONFIG[statName]
   if (!config) return null
 
-  const IconComponent = ICON_COMPONENTS[config.icon as keyof typeof ICON_COMPONENTS]
+  const IconComponent =
+    ICON_COMPONENTS[config.icon as keyof typeof ICON_COMPONENTS]
 
   const style: React.CSSProperties = {
     ...ICON_CONTAINER_STYLE,
@@ -70,7 +72,7 @@ function renderStats(pokemon: any) {
   const displayStats = pokemon.stats.filter(
     (stat: any) =>
       stat.stat.name !== POKEMON_STATS.SPECIAL_ATTACK &&
-      stat.stat.name !== POKEMON_STATS.SPECIAL_DEFENSE
+      stat.stat.name !== POKEMON_STATS.SPECIAL_DEFENSE,
   )
 
   return displayStats.map((stat: any) => (
@@ -89,14 +91,16 @@ export default function PokemonCard({ pokemonName }: IPokemonCard) {
 
   return (
     <Card size={'2'}>
-      <Flex direction={'column'} justify={'between'}>
+      <Flex direction={'column'} justify={'between'} gap={'4'}>
         <Flex direction={'column'} gap={'2'}>
           <Flex justify={'between'} direction={'row'} align={'center'}>
             <Text size={'6'} weight={'bold'}>
               {pokemon?.name}
             </Text>
             <Badge>
-              <Text weight={'bold'}>#{pokemon?.id}</Text>
+              <Text weight={'bold'}>
+                #{IDToStandardSizedString(pokemon?.id || 0)}
+              </Text>
             </Badge>
           </Flex>
 
@@ -149,6 +153,17 @@ export default function PokemonCard({ pokemonName }: IPokemonCard) {
               </Flex>
             </PokemonCardStat>
           </Grid>
+        </Skeleton>
+
+        <Skeleton loading={loading}>
+          <Flex direction={'column'} gap={'2'}>
+            <Text size={'2'}>Abilities</Text>
+            <Flex gap={'1'}>
+              {pokemon?.abilities.map((ability) => (
+                <Badge>{ability.ability.name}</Badge>
+              ))}
+            </Flex>
+          </Flex>
         </Skeleton>
       </Flex>
     </Card>
